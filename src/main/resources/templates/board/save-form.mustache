@@ -1,0 +1,30 @@
+{{> layout/header}}
+
+<div class="container" style="max-width:720px;">
+    <h1 class="page-title">NEW POST</h1>
+    <p class="page-subtitle">운동 기록을 공유해보세요</p>
+
+    <div class="card">
+        <form action="/board/save" method="post">
+            <div class="form-group">
+                <label>카테고리</label>
+                <select name="categoryId">
+                    {{#categories}}
+                    <option value="{{id}}">{{name}}</option>
+                    {{/categories}}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>제목</label>
+                <input type="text" name="title" placeholder="제목을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label>내용</label>
+                <textarea name="content" placeholder="운동 기록, 식단, 팁 등을 자유롭게 작성해보세요..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">게시글 등록</button>
+        </form>
+    </div>
+</div>
+
+{{> layout/footer}}

@@ -1,0 +1,31 @@
+{{> layout/header}}
+
+<div class="container" style="max-width:480px;">
+    <h1 class="page-title">LOGIN</h1>
+    <p class="page-subtitle">다시 돌아오셨군요</p>
+
+    {{#errorMsg}}
+    <div class="alert alert-error">{{errorMsg}}</div>
+    {{/errorMsg}}
+
+    <div class="card">
+        <form action="/login" method="post">
+            <div class="form-group">
+                <label>아이디</label>
+                <input type="text" name="username" placeholder="아이디를 입력하세요">
+            </div>
+            <div class="form-group">
+                <label>비밀번호</label>
+                <input type="password" name="password" placeholder="비밀번호를 입력하세요">
+            </div>
+            <button type="submit" class="btn-submit">로그인</button>
+        </form>
+    </div>
+
+    <p style="text-align:center;margin-top:1.5rem;font-size:0.83rem;color:#555;">
+        계정이 없으신가요?
+        <a href="/join-form" style="color:#e8ff00;font-weight:600;">회원가입</a>
+    </p>
+</div>
+
+{{> layout/footer}}

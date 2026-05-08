@@ -1,0 +1,34 @@
+{{> layout/header}}
+
+<div class="container" style="max-width:720px;">
+    <h1 class="page-title">EDIT POST</h1>
+    <p class="page-subtitle">게시글을 수정합니다</p>
+
+    <div class="card">
+        <form action="/board/{{board.id}}/update" method="post">
+            <div class="form-group">
+                <label>카테고리</label>
+                <select name="categoryId">
+                    {{#categories}}
+                    <option value="{{id}}" {{#isSelected}}selected{{/isSelected}}>{{name}}</option>
+                    {{/categories}}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>제목</label>
+                <input type="text" name="title" value="{{board.title}}">
+            </div>
+            <div class="form-group">
+                <label>내용</label>
+                <textarea name="content">{{board.content}}</textarea>
+            </div>
+            <button type="submit" class="btn-submit">수정 완료</button>
+        </form>
+    </div>
+
+    <div style="margin-top:1.5rem;text-align:center;">
+        <a href="/board/{{board.id}}" style="font-size:0.82rem;color:#555;letter-spacing:1px;">← 취소하고 돌아가기</a>
+    </div>
+</div>
+
+{{> layout/footer}}
