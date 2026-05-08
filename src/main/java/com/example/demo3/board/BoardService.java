@@ -2,6 +2,8 @@ package com.example.demo3.board;
 
 import com.example.demo3.category.Category;
 import com.example.demo3.category.CategoryRepository;
+import com.example.demo3.user.User;
+import com.example.demo3.user.UserRepository;
 import com.example.demo3.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,26 +21,37 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
-    // 게시글 작성
+
     @Transactional
     public void writePost(BoardRequest.SaveDTO saveDTO, UserResponse.SessionDTO sessionUser) {
         log.info("게시글 작성 서비스 시작");
 
-            // 카테고리 조회 - 없으면 예외 발생
-            Category category = categoryRepository.findById(saveDTO.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다"));
+        // DB에서 실제 User 엔티티 조회 (영속성 컨텍스트에 등록)
+        User user = userRepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
 
-            // 빌더 패턴으로 엔티티 생성 후 저장
-            Board board = Board.builder()
-                    .title(saveDTO.getTitle())
-                    .content(saveDTO.getContent())
-                    .user(sessionUser)
-                    .category(category)
-                    .build();
-            boardRepository.save(board);
-            log.info("게시글 작성 완료 - id : {}",board.getId());
+        Category category = categoryRepository.findById(saveDTO.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다"));
 
+        Board board = Board.builder()
+                .title(saveDTO.getTitle())
+                .content(saveDTO.getContent())
+                .user(user) // ← sessionUser 대신 user
+                .category(category)
+                .build();
+
+        boardRepository.save(board);
+        log.info("게시글 작성 완료 - id : {}", board.getId());
+    }
+
+    public List<BoardResponse.ListDTO> categories(String categoryName) {
+        log.info("카테고리별 게시글 목록 조회 - category : {}", categoryName);
+        return boardRepository.findAllByCategory(categoryName)
+                .stream()
+                .map(BoardResponse.ListDTO::new)
+                .collect(Collectors.toList());
     }
 
     // 게시글 목록

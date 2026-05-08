@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -16,6 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+
+    public List<CommentResponse.DetailDTO> getCommentsByBoardId(Integer boardId, Integer sessionUserId) {
+        return commentRepository.findAllByBoardId(boardId)
+                .stream()
+                .map(comment -> new CommentResponse.DetailDTO(comment, sessionUserId))
+                .collect(Collectors.toList());
+    }
 
     // 댓글 작성
     @Transactional
@@ -47,7 +57,7 @@ public class CommentService {
                 .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다"));
 
         // 작성자인지 확인 - 작성자 아니면 예외
-        if (!comment.getUser().equals(sessionUser.getId())) {
+        if (!comment.getUser().getId().equals(sessionUser.getId())) {
             throw new Exception403("본인이 작성한 댓글이 아닙니다");
         }
         commentRepository.deleteById(id);

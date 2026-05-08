@@ -2,7 +2,10 @@ package com.example.demo3.board;
 
 import com.example.demo3.category.Category;
 import com.example.demo3.category.CategoryService;
+import com.example.demo3.comment.CommentResponse;
+import com.example.demo3.comment.CommentService;
 import com.example.demo3.user.UserResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -22,6 +26,17 @@ public class BoardController {
 
     private final BoardService boardService;
     private final CategoryService categoryService;
+    private final CommentService commentService;
+
+
+    @GetMapping("/main")
+    public String main(Model model, HttpServletRequest request) {
+        List<BoardResponse.ListDTO> list = boardService.postList();
+        log.info("boards 사이즈 : {}", list.size());
+        model.addAttribute("boards", list);
+        return "index";
+    }
+
 
 
     // 메인 페이지 + 게시글 목록 요청
@@ -33,11 +48,14 @@ public class BoardController {
         return "index";
     }
 
-    // 게시글 목록 화면 요청
-    // GET http://localhost:8080/board/list
     @GetMapping("/board/list")
-    public String list(Model model) {
-        List<BoardResponse.ListDTO> boardList = boardService.postList();
+    public String list(@RequestParam(required = false) String category, Model model) {
+        List<BoardResponse.ListDTO> boardList;
+        if (category != null && !category.isBlank()) {
+            boardList = boardService.categories(category);
+        } else {
+            boardList = boardService.postList();
+        }
         model.addAttribute("boardList", boardList);
         return "board/list";
     }
@@ -60,7 +78,7 @@ public class BoardController {
         saveDTO.validate();
         UserResponse.SessionDTO sessionUser = (UserResponse.SessionDTO) session.getAttribute("sessionUser");
         boardService.writePost(saveDTO, sessionUser);
-        return "redirect:/";
+        return "redirect:/main";
     }
 
     // 게시글 상세 화면 요청
@@ -68,11 +86,14 @@ public class BoardController {
     @GetMapping("/board/{id}")
     public String detailPage(@PathVariable Integer id, Model model, HttpSession session) {
         UserResponse.SessionDTO sessionUser = (UserResponse.SessionDTO) session.getAttribute("sessionUser");
+        Integer sessionUserId = sessionUser != null ? sessionUser.getId() : null;
         BoardResponse.DetailDTO detailDTO = boardService.postDetails(id);
         boolean isOwner = sessionUser != null && sessionUser.getId().equals(detailDTO.getUserId());
+        List<CommentResponse.DetailDTO> comments = commentService.getCommentsByBoardId(id, sessionUserId);
         model.addAttribute("board", detailDTO);
         model.addAttribute("isOwner", isOwner);
-        return "board/detail"; // board/detail.mustache 렌더링
+        model.addAttribute("comments", comments);
+        return "board/detail";
     }
 
     // 게시글 삭제 기능 요청

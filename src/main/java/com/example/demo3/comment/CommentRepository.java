@@ -16,7 +16,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     // 댓글 단건 조회
     @Query("""
-      SELECT c FROM Comment c JOIN FETCH c.board WHERE c.id = :id
+      SELECT c FROM Comment c JOIN FETCH c.user JOIN FETCH c.board WHERE c.id = :id
 """)
     Optional<Comment> findByIdJoinBoard(@Param("id") Integer id);
 }

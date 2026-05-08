@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -30,10 +31,10 @@ public class CommentController {
     // 댓글 삭제 기능 요청
     // http://localhost:8080/comment/{id}/delete
     @PostMapping("/comment/{id}/delete")
-    public String deleteProc(@PathVariable Integer id, Integer boardId, HttpSession session){
+    public String deleteProc(@PathVariable Integer id, @RequestParam Integer boardId, HttpSession session){
        UserResponse.SessionDTO sessionUser = (UserResponse.SessionDTO) session.getAttribute("sessionUser");
        commentService.deleteComment(id, sessionUser);
-       return "redirect:/board" + boardId;
+       return "redirect:/board/" + boardId;
     }
 
 }

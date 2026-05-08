@@ -23,6 +23,7 @@ public class UserResponse {
             super.setId(user.getId());
             super.setUsername(user.getUsername());
             super.setEmail(user.getEmail());
+
         }
 
     }

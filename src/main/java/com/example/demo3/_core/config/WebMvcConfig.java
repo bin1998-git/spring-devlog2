@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 // 자바 코드로 스프링 부트 설정파일을 다룰 수 있다.
@@ -22,11 +23,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private SessionInterceptor sessionInterceptor;
 
     @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // static/index.html 을 무력화
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/");
+    }
+
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
         // 화면에 SessionUser 정보를 내려줄 떄 사용 됨
-//        registry.addInterceptor(sessionInterceptor)
-//                .addPathPatterns("/**"); //모든 URL 요청에서 동작 함
+        registry.addInterceptor(sessionInterceptor)
+                .addPathPatterns("/**"); //모든 URL 요청에서 동작 함
 
 
         // 인증처리 인터셉터 동작
@@ -37,7 +45,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         // 로그인 관련(인증이 필요 없는 페이지)
                         "/user/login-form",
+                        "/user/login",
                         "/user/join-form",
+                        "/user/update-form",
+                        "/user/join",
                         "/user/logout", // 로그아웃
 
                         // 게시글 조회 관련 (인증 없이도 볼 수 있는 페이지)

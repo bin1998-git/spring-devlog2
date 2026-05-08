@@ -1,6 +1,5 @@
 package com.example.demo3._core.interceptor;
 
-import com.example.demo3.user.User;
 import com.example.demo3.user.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,21 +23,13 @@ public class SessionInterceptor implements HandlerInterceptor {
         // 1. 화면을(View) 반환하는 요청인지 먼저 확인한다. /** <-- 모든 URL 요청시 동작
         // 데이터만(JSON) 반환 하는 요청일 경우 modelAndView가 없음으로 건너뜀
         if (modelAndView != null) {
-            // 화면을 반환하는 동작(논리적으로).
-            // request.getSession(true);
-            // request.getSession(false);
-            //  request.getSession(); <-- 기본값은 true이다
             HttpSession session = request.getSession(false);
-            // false로 설정하는 이유!
-            // 만약 a라는 사용자가 우리 서버에 최초 요청일 경우
-            // 스프링이 자동으로 세션을 만들어라고 동작하게 됨
-            // 성능떄문에 매번 세션메모리를 생성하지 마
+            UserResponse.SessionDTO sessionUser = null;
             if (session != null) {
-                UserResponse.SessionDTO sessionUser = (UserResponse.SessionDTO) session.getAttribute("sessionUser");
-                if (sessionUser != null) {
-                    modelAndView.addObject("sessionUser", sessionUser);
-                }
+                sessionUser = (UserResponse.SessionDTO) session.getAttribute("sessionUser");
             }
+            // 로그인 여부와 무관하게 항상 주입 (null이면 {{#sessionUser}} 미출력)
+            modelAndView.addObject("sessionUser", sessionUser);
         }
 
     }

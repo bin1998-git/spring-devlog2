@@ -14,21 +14,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
     private final UserService userService;
 
+
+    @GetMapping("/login")
+    public String loginRedirect() {
+        return "redirect:/user/login-form";
+    }
     // 회원가입 화면 요청
-    @GetMapping("/join-form")
+    @GetMapping("/user/join-form")
     public String joinFormPage() {
         return "user/join-form";
     }
 
     // 회원가입 기능 요청
-    @PostMapping("/join")
+    @PostMapping("/user/join")
     public String joinProc(UserRequest.JoinDTO joinDTO) {
-        // 유효성 검사
         joinDTO.validate();
         userService.Join(joinDTO);
-        return "redirect:/login-form";
+        return "redirect:/user/login-form"; // ← /login-form → /user/login-form
     }
-
 
     // 로그인후 마이페이지
     @GetMapping("/user/update-form")
@@ -40,13 +43,13 @@ public class UserController {
     }
 
     // 로그인 화면 요청
-    @GetMapping("/login-form")
+    @GetMapping("/user/login-form")
     public String loginFormPage() {
         return "user/login-form";
     }
 
     // 로그인 기능 요청
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public String loginProc(UserRequest.LoginDTO loginDTO, HttpSession session) {
         loginDTO.validate();
         UserResponse.SessionDTO sessionDTO = userService.login(loginDTO);
@@ -56,7 +59,7 @@ public class UserController {
     }
 
     // 로그아웃
-    @GetMapping("/logout")
+    @GetMapping("/user/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
@@ -67,7 +70,7 @@ public class UserController {
 
 
     // 회원정보 수정 기능
-    @PostMapping("/update")
+    @PostMapping("/user/update")
     public String updateProc(UserRequest.UpdateDTO updateDTO, HttpSession session) {
         // 유효성 검사
         updateDTO.validate();
