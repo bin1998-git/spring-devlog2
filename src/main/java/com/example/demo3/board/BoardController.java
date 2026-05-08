@@ -57,6 +57,15 @@ public class BoardController {
             boardList = boardService.postList();
         }
         model.addAttribute("boardList", boardList);
+
+
+        // 카테고리 활성화 플래그
+        model.addAttribute("isAll", category == null || category.isBlank());
+        model.addAttribute("isHealth", "헬스".equals(category));
+        model.addAttribute("isDiet", "식단".equals(category));
+        model.addAttribute("isHome", "홈트".equals(category));
+        model.addAttribute("isSupplement", "보충제".equals(category));
+
         return "board/list";
     }
 
@@ -70,15 +79,13 @@ public class BoardController {
         return "board/save-form";
     }
 
-    // 게시글 작성 기능 요청
-    // POST http://localhost:8080/board/save
     @PostMapping("/board/save")
-    public String saveProc(BoardRequest.SaveDTO saveDTO, HttpSession session) {
-        // 유효성 검사
+    public String saveProc(BoardRequest.SaveDTO saveDTO, HttpSession session) throws Exception {
         saveDTO.validate();
         UserResponse.SessionDTO sessionUser = (UserResponse.SessionDTO) session.getAttribute("sessionUser");
-        boardService.writePost(saveDTO, sessionUser);
-        return "redirect:/main";
+        String categoryName = boardService.writePost(saveDTO, sessionUser);
+        String encodedCategory = java.net.URLEncoder.encode(categoryName, "UTF-8");
+        return "redirect:/board/list?category=" + encodedCategory;
     }
 
     // 게시글 상세 화면 요청

@@ -11,12 +11,13 @@
         {{/sessionUser}}
     </div>
 
+    <!-- 카테고리 필터 -->
     <div style="display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap;">
-        <a href="/board/list" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid #e8ff00;color:#e8ff00;background:rgba(232,255,0,0.08);">전체</a>
-        <a href="/board/list?category=헬스" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid #2a2a2a;color:#888;">헬스</a>
-        <a href="/board/list?category=식단" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid #2a2a2a;color:#888;">식단</a>
-        <a href="/board/list?category=홈트" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid #2a2a2a;color:#888;">홈트</a>
-        <a href="/board/list?category=보충제" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid #2a2a2a;color:#888;">보충제</a>
+        <a href="/board/list" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid {{#isAll}}#e8ff00{{/isAll}}{{^isAll}}#2a2a2a{{/isAll}};color:{{#isAll}}#e8ff00{{/isAll}}{{^isAll}}#888{{/isAll}};background:{{#isAll}}rgba(232,255,0,0.08){{/isAll}}{{^isAll}}transparent{{/isAll}};">전체</a>
+        <a href="/board/list?category=헬스" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid {{#isHealth}}#e8ff00{{/isHealth}}{{^isHealth}}#2a2a2a{{/isHealth}};color:{{#isHealth}}#e8ff00{{/isHealth}}{{^isHealth}}#888{{/isHealth}};background:{{#isHealth}}rgba(232,255,0,0.08){{/isHealth}}{{^isHealth}}transparent{{/isHealth}};">헬스</a>
+        <a href="/board/list?category=식단" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid {{#isDiet}}#e8ff00{{/isDiet}}{{^isDiet}}#2a2a2a{{/isDiet}};color:{{#isDiet}}#e8ff00{{/isDiet}}{{^isDiet}}#888{{/isDiet}};background:{{#isDiet}}rgba(232,255,0,0.08){{/isDiet}}{{^isDiet}}transparent{{/isDiet}};">식단</a>
+        <a href="/board/list?category=홈트" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid {{#isHome}}#e8ff00{{/isHome}}{{^isHome}}#2a2a2a{{/isHome}};color:{{#isHome}}#e8ff00{{/isHome}}{{^isHome}}#888{{/isHome}};background:{{#isHome}}rgba(232,255,0,0.08){{/isHome}}{{^isHome}}transparent{{/isHome}};">홈트</a>
+        <a href="/board/list?category=보충제" style="font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;border:1px solid {{#isSupplement}}#e8ff00{{/isSupplement}}{{^isSupplement}}#2a2a2a{{/isSupplement}};color:{{#isSupplement}}#e8ff00{{/isSupplement}}{{^isSupplement}}#888{{/isSupplement}};background:{{#isSupplement}}rgba(232,255,0,0.08){{/isSupplement}}{{^isSupplement}}transparent{{/isSupplement}};">보충제</a>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:1rem;">
@@ -31,7 +32,7 @@
                     <p style="font-size:0.82rem;color:#555;">
                         <span style="color:#777;">{{username}}</span>
                         &nbsp;·&nbsp;
-                        <span>{{created}}</span>
+                        <span>{{writeDate}}</span>
                     </p>
                 </div>
                 <span style="color:#333;font-size:1.5rem;flex-shrink:0;">→</span>

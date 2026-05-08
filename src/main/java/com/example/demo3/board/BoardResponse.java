@@ -12,7 +12,7 @@ public class BoardResponse {
         private String title;
         private String username;
         private String categoryName;
-        private String created;
+        private String writeDate = "-";
 
         public ListDTO(Board board) {
             this.id = board.getId();
@@ -24,7 +24,7 @@ public class BoardResponse {
                 this.categoryName = board.getCategory().getName();
             }
             if (board.getCreatedAt() != null) {
-                this.created = MyDateUtil.timeStampFormat(board.getCreatedAt());
+                this.writeDate = MyDateUtil.timeStampFormat(board.getCreatedAt());
             }
         }
     }

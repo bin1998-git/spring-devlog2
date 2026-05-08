@@ -23,12 +23,10 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-
     @Transactional
-    public void writePost(BoardRequest.SaveDTO saveDTO, UserResponse.SessionDTO sessionUser) {
+    public String writePost(BoardRequest.SaveDTO saveDTO, UserResponse.SessionDTO sessionUser) {
         log.info("게시글 작성 서비스 시작");
 
-        // DB에서 실제 User 엔티티 조회 (영속성 컨텍스트에 등록)
         User user = userRepository.findById(sessionUser.getId())
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
 
@@ -38,12 +36,13 @@ public class BoardService {
         Board board = Board.builder()
                 .title(saveDTO.getTitle())
                 .content(saveDTO.getContent())
-                .user(user) // ← sessionUser 대신 user
+                .user(user)
                 .category(category)
                 .build();
 
         boardRepository.save(board);
         log.info("게시글 작성 완료 - id : {}", board.getId());
+        return category.getName(); // ← 추가
     }
 
     public List<BoardResponse.ListDTO> categories(String categoryName) {
