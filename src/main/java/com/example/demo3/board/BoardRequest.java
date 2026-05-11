@@ -89,7 +89,7 @@ public class BoardRequest {
             }
             // 방어적 코드 - createdAt null 체크
             if (board.getCreatedAt() != null) {
-                this.createdAt = MyDateUtil.timeStampFormat(board.getCreatedAt());
+                this.createdAt = board.getForMatterCreatedAt();
             }
             // 로그인 안 한 경우 null 처리 - 소유자 아님
             if (sessionUserId != null && board.getUser() != null) {

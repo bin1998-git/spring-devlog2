@@ -39,7 +39,8 @@ public class Board {
     @CreationTimestamp
     private Timestamp createdAt;
 
-    public String getTime() {
+    public String getForMatterCreatedAt() {
+        if (createdAt == null) return "";
         return MyDateUtil.timeStampFormat(createdAt);
     }
 
@@ -54,4 +55,6 @@ public class Board {
         }
         return true;
     }
+
+
 }

@@ -1,18 +1,17 @@
 package com.example.demo3.board;
 
-import com.example.demo3.util.MyDateUtil;
 import lombok.Data;
 import lombok.Getter;
 
 public class BoardResponse {
 
-    @Getter
+    @Data
     public static class ListDTO {
         private Integer id;
         private String title;
         private String username;
         private String categoryName;
-        private String writeDate = "-";
+        private String createdAt;
 
         public ListDTO(Board board) {
             this.id = board.getId();
@@ -24,13 +23,13 @@ public class BoardResponse {
                 this.categoryName = board.getCategory().getName();
             }
             if (board.getCreatedAt() != null) {
-                this.writeDate = MyDateUtil.timeStampFormat(board.getCreatedAt());
+                this.createdAt = board.getForMatterCreatedAt();
             }
         }
     }
 
     // 게시글 상세보기 응답DTO
-    @Getter
+    @Data
     public static class DetailDTO {
         private Integer id; // board pk
         private String title;
@@ -52,7 +51,7 @@ public class BoardResponse {
                 this.categoryName = board.getCategory().getName();
             }
             this.created = board.getCreatedAt() != null
-                    ? MyDateUtil.timeStampFormat(board.getCreatedAt()) : "";
+                    ? board.getForMatterCreatedAt() : "";
         }
     }
 }
